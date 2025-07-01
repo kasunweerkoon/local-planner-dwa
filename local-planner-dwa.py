@@ -26,11 +26,11 @@ class Config():
     def __init__(self):
         
         # Configuration parameters
-        self.max_speed = 0.7  # [m/s]
+        self.max_speed = 0.5  # [m/s]
         self.min_speed = 0.0 # [m/s]
-        self.max_yawrate = 0.7  # [rad/s]
-        self.max_accel = 1  # [m/ss]
-        self.max_dyawrate = 3.2  # [rad/ss]
+        self.max_yawrate = 0.5  # [rad/s]
+        self.max_accel = 0.5  # [m/ss]
+        self.max_dyawrate = 1.2 #3.2  # [rad/ss]
         
         self.v_reso = 0.15  # [m/s]
         self.yawrate_reso = 0.05 #0.05  # [rad/s]
@@ -45,8 +45,8 @@ class Config():
         self.speed_cost_gain = 1        # lower -> faster motion
         self.obs_cost_gain = 30         # lower -> fearless, i.e., move too close to the obstacles
         
-        self.robot_radius = 0.5  # [m] # Affects the obstacle avoidance and goal reaching thresholds
-        self.laser_range_max = 5.0  # [m] Clamp infinite range of laserscan if needed
+        self.robot_radius = 0.3 # [m] # Affects the obstacle avoidance and goal reaching thresholds
+        self.laser_range_max = 6.0  # [m] Clamp infinite range of laserscan if needed
         self.goal_received = False  # Flag to check if goal has been published
 
         # Initial robot state parameters
@@ -321,11 +321,11 @@ def main():
     config = Config()
     obs = Obstacles()
 
-    subOdom = rospy.Subscriber("/odometry/filtered", Odometry, config.assignOdomCoords)
-    subLaser = rospy.Subscriber("/scan", LaserScan, obs.assignObs, config)
+    subOdom = rospy.Subscriber("/go2_0/lio/odometry", Odometry, config.assignOdomCoords)
+    subLaser = rospy.Subscriber("/go2_0/scan", LaserScan, obs.assignObs, config)
     subWaypoint = rospy.Subscriber('/waypoint', Twist, config.goal_waypoint_callback)
 
-    pubVel = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+    pubVel = rospy.Publisher("/velocity_cmd", Twist, queue_size=1)
 
     speed = Twist()
     
